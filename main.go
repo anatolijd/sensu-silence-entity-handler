@@ -175,7 +175,7 @@ func initHTTPClient() *http.Client {
 	tlsConfig := &tls.Config{
 		RootCAs: certs,
 	}
-	if plugin.InsecureSkipVerify == true {
+	if plugin.InsecureSkipVerify {
 		tlsConfig.InsecureSkipVerify = true
 	}
 	tr := &http.Transport{
@@ -247,5 +247,5 @@ func executeHandler(event *types.Event) error {
 		fmt.Printf("%s\n", string(b))
 		return nil
 	}
-	return nil
+	//return nil
 }

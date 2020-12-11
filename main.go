@@ -15,6 +15,7 @@ import (
 	corev2 "github.com/sensu/sensu-go/api/core/v2"
 	"bytes"
 	"encoding/json"
+	"time"
 )
 
 // Config represents the handler plugin config.
@@ -27,8 +28,9 @@ type Config struct {
 	Namespace     string
 	Entity        string
 	TrustedCaFile string
-	InsecureSkipVerify bool
 	Expire        int
+	Reason        string
+	InsecureSkipVerify	bool
 }
 
 var (
@@ -111,6 +113,15 @@ var (
 			Usage:     "silence period, seconds",
 			Value:     &plugin.Expire,
 		},
+		&sensu.PluginConfigOption{
+			Path:      "reason",
+			Env:       "",
+			Argument:  "reason",
+			Shorthand: "r",
+			Default:   "sensu-silence-entity-handler",
+			Usage:     "Reason",
+			Value:     &plugin.Reason,
+		},
 	}
 )
 
@@ -192,10 +203,9 @@ func executeHandler(event *types.Event) error {
 	var metadata 		= corev2.NewObjectMeta(fmt.Sprintf("entity:%s:%s", entityName, "*"),
 											   event.Entity.Namespace)
 	var silenced 		= corev2.NewSilenced(metadata)
-	silenced.Reason 	= "Provisioning"
-	silenced.Creator 	= "sensu-silence-entity-handler"
+	silenced.Reason 	= plugin.Reason
 	silenced.Expire 	= int64(plugin.Expire)
-	silenced.Begin 		= 0
+	silenced.Begin 		= time.Now().Unix()
 	silenced.Subscription 	 = fmt.Sprintf("entity:%s", entityName)
 	silenced.ExpireOnResolve = false
 

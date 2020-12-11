@@ -40,6 +40,7 @@ Flags:
  -h, --help                       help for sensu-silence-entity-handler
  -i, --insecure-skip-tls-verify   skip TLS certificate verification
      --namespace string           Sensu Namespace
+ -r, --reason string              Reason (default "sensu-silence-entity-handler")
      --trusted-ca-file string     Sensu Trusted Certificate Authority file
 
 Use "sensu-silence-entity-handler [command] --help" for more information about a command.
